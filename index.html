@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalPulse - Hyper-Local Real-Time Availability Platform</title>
+    <style>
+        :root {
+            --bg-color: #080f1a;
+            --card-bg: #111d33;
+            --accent-color: #00f2fe;
+            --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(0, 242, 254, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 0;
+        }
+
+        /* Navbar */
+        nav {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            z-index: 10;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Area with Radar Pulse */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 1rem 2rem 1rem;
+            max-width: 850px;
+            position: relative;
+        }
+
+        .logo-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .map-pin {
+            width: 70px;
+            height: 70px;
+            background: var(--accent-gradient);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 10px 25px rgba(0, 242, 254, 0.3);
+        }
+
+        .map-pin::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: var(--bg-color);
+            border-radius: 50%;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid var(--accent-color);
+            border-radius: 50%;
+            height: 70px;
+            width: 70px;
+            animation: radar-pulse 3s ease-out infinite;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .pulse-ring.delay {
+            animation-delay: 1.5s;
+        }
+
+        @keyframes radar-pulse {
+            0% {
+                width: 70px;
+                height: 70px;
+                opacity: 0.6;
+            }
+            100% {
+                width: 250px;
+                height: 250px;
+                opacity: 0;
+            }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        h1 span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        /* Lead Capture Form */
+        .cta-form {
+            background: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: 50px;
+            display: flex;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            margin-bottom: 5rem;
+        }
+
+        .cta-form input[type="email"] {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            padding: 0.8rem 1.5rem;
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+
+        .cta-form input::placeholder {
+            color: #4b5563;
+        }
+
+        .cta-form button {
+            background: var(--accent-gradient);
+            color: #080f1a;
+            border: none;
+            outline: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cta-form button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        /* Content Sections Container */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            font-weight: 700;
+        }
+
+        .section-title span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Benefit Split Panels */
+        .benefit-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-bottom: 6rem;
+        }
+
+        @media (max-width: 768px) {
+            .benefit-split {
+                grid-template-columns: 1fr;
+            }
+            h1 { font-size: 2.5rem; }
+        }
+
+        .benefit-panel {
+            background: linear-gradient(180deg, var(--card-bg) 0%, rgba(17,29,51,0.4) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-panel:hover {
+            border-color: var(--border-glow);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.05);
+        }
+
+        .benefit-panel h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .benefit-panel ul {
+            list-style: none;
+        }
+
+        .benefit-panel li {
+            position: relative;
+            padding-left: 1.8rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: 1.05rem;
+        }
+
+        .benefit-panel li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: 900;
+        }
+
+        .benefit-panel li strong {
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        /* Technical Highlights Section */
+        .tech-section {
+            background: rgba(17, 29, 51, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100vw;
+            padding: 5rem 0;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 4rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1100px;
+            padding: 0 2rem;
+        }
+
+        .tech-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 16px 0 0 16px;
+        }
+
+        .tech-card h4 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+        }
+
+        .tech-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 2.5rem 0;
+            color: #475569;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: #060b12;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">LocalPulse</div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="logo-container">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring delay"></div>
+            <div class="map-pin"></div>
+        </div>
+        <h1>The Direct Link to Your <span>Immediate Neighborhood</span></h1>
+        <p class="tagline">
+            Stop digging through outdated group chats, stale directory listings, and broken links. LocalPulse maps verified availability within a 5 to 10 km radius in real time.
+        </p>
+
+        <form class="cta-form" onsubmit="event.preventDefault(); alert('Welcome to the neighborhood circle! We will notify you the moment LocalPulse goes live.');">
+            <input type="email" placeholder="Enter your email to get early access" required>
+            <button type="submit">Join the Pulse</button>
+        </form>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Why Use <span>LocalPulse?</span></h2>
+        
+        <div class="benefit-split">
+            <div class="benefit-panel">
+                <h3>📍 For Local Seekers</h3>
+                <ul>
+                    <li>
+                        <strong>Hyper-Accurate Radius Targeting</strong>
+                        Filter everything strictly within your immediate vicinity (5 to 10 km). Save travel time, fuel, and delivery fees.
+                    </li>
+                    <li>
+                        <strong>Zero Stale Information</strong>
+                        Every posting expires automatically after 24 hours. If you see it on your feed, it means it is verified available right now.
+                    </li>
+                    <li>
+                        <strong>Instant Frictionless Discovery</strong>
+                        No mandatory multi-step profile setups just to look around. Open the homepage, check the feed instantly, and connect immediately.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="benefit-panel">
+                <h3>🚀 For Local Shops & Sellers</h3>
+                <ul>
+                    <li>
+                        <strong>Zero Onboarding Friction</strong>
+                        Set up your presence in seconds using rapid OTP authentication. No complex catalogs or storefront setup required.
+                    </li>
+                    <li>
+                        <strong>Direct Customer Channels</strong>
+                        Publish an item or service instantly, detail your availability, and allow buyers to seamlessly call or text you directly.
+                    </li>
+                    <li>
+                        <strong>Dynamic Micro-Marketing</strong>
+                        Don't fight algorithms on massive social platforms. Put your goods right in front of active high-intent buyers walking outside your door.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <section class="tech-section">
+        <div class="tech-grid">
+            <div class="tech-card">
+                <h4>PostGIS Spatial Engine</h4>
+                <p>Built with enterprise-grade PostgreSQL spatial indexing. Coordinates are treated as native geometry points for lightning-fast radius calculations.</p>
+            </div>
+            <div class="tech-card">
+                <h4>Automated Stale-Data Purging</h4>
+                <p>An internal scheduled cron subsystem auto-cleans expired database indices daily. System performance scales indefinitely while preserving data fresh.</p>
+            </div>
+            <div class="tech-card">
+                <h4>Frictionless Auth Services</h4>
+                <p>Utilizes ultra-secure stateless JSON Web Tokens coupled with fast OTP validation to keep onboarding instant yet secure.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2026 LocalPulse Backend Systems. Engineered via Spring Boot Monolith Architecture.
+    </footer>
+
+</body>
+</html>
